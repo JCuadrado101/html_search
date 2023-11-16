@@ -1,24 +1,42 @@
-let dataUrl = "https://api.openbrewerydb.org/v1/breweries";
-let table = document.getElementById("data-table");
+function searchBreweries() {
+    let dataUrl = "https://api.openbrewerydb.org/v1/breweries";
+    let table = document.getElementById("data-tbody-table");
+    let searchInput = document.getElementById("searchInput").value.toLowerCase();
 
-fetch(dataUrl)
-    .then(response => response.json())
-    .then(data => {
-        data.forEach(brewery => {
-            let row = table.insertRow();
-            let cell = row.insertCell(0);
-            let address = row.insertCell(1);
-            let city = row.insertCell(1);
-            let state = row.insertCell(1);
-            let zipCode = row.insertCell(1);
 
-            cell.textContent = brewery.name;
-            address.textContent = brewery.street
-            city.textContent = brewery.city
-            state.textContent = brewery.state
-            zipCode.textContent = brewery.postal_code
+        table.innerHTML = "";
+
+    fetch(dataUrl)
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(brewery => {
+                if (
+                    brewery.name.toLowerCase().includes(searchInput) ||
+                    brewery.street.toLowerCase().includes(searchInput) ||
+                    brewery.city.toLowerCase().includes(searchInput) ||
+                    brewery.state.toLowerCase().includes(searchInput) ||
+                    brewery.postal_code.toLowerCase().includes(searchInput)
+                ) {
+                    let row = table.insertRow();
+                    let cellName = row.insertCell(0);
+                    let cellAddress = row.insertCell(1);
+                    let cellCity = row.insertCell(2);
+                    let cellState = row.insertCell(3);
+                    let cellZipCode = row.insertCell(4);
+
+                    cellName.textContent = brewery.name;
+                    cellAddress.textContent = brewery.street || '';
+                    cellCity.textContent = brewery.city || '';
+                    cellState.textContent = brewery.state || '';
+                    cellZipCode.textContent = brewery.postal_code || '';
+                }
+            });
         })
-    })
-    .catch(error => {
-        console.error(error);
-    });
+        .catch(error => {
+            console.error(error);
+        });
+
+        console.log(table);
+    
+
+}
